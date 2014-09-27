@@ -9,9 +9,10 @@ public class DisplayLinkedList {
 		}
 		Node current = head;
 		while(current != null){
-			System.out.println(current.info);
+			System.out.print(current.info +"\t");
 			current = current.link;
 		}
+		System.out.println();
 	}
 	
 }
