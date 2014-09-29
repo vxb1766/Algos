@@ -1,6 +1,7 @@
 package com.uta.stacks;
 
 public class SortStack extends java.util.Stack{
+	Stack dummyStack = new Stack();
 	
 	public void  sort(Stack input){
 		
