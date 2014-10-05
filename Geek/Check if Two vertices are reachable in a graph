@@ -1,0 +1,155 @@
+/*Find if there is a path between two vertices in a directed graph*/
+package com.uta.graph;
+
+import java.util.LinkedList;
+import java.util.Stack;
+
+public class GraphPrograms {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Vertex v1 = new Vertex(10);
+		Vertex v2 = new Vertex(20);
+		Vertex v3 = new Vertex(30);
+		Vertex v4 = new Vertex(40);
+		Vertex v5 = new Vertex(50);
+		Vertex v6 = new Vertex(60);
+
+		Graph g = new Graph(true);// this true is used to indicate the graph is
+									// a directed Graph
+		g.vertices.add(v1);
+		g.vertices.add(v2);
+		g.vertices.add(v3);
+		g.vertices.add(v4);
+		g.vertices.add(v5);
+		g.vertices.add(v6);
+
+		g.addEdge(v1, v2);
+		g.addEdge(v1, v3);
+		g.addEdge(v1, v4);
+		g.addEdge(v2, v4);
+		g.addEdge(v4, v5);
+
+		g.setRoot(v1);
+		System.out.println(g.isReachable(v2, v5));
+		System.out.println(g.isReachable(v2, v6));
+
+	}
+
+}
+
+class Graph {
+	LinkedList<Vertex> vertices;
+	boolean isDirectedGraph;
+	Vertex root;
+
+	public boolean isReachable(Vertex v1, Vertex v2) {
+		if (v1 == null || v2 == null)
+			return false;
+		Stack<Vertex> st = new Stack<Vertex>();
+		st.push(v1);
+		v1.setVisited(true);
+		while (!st.isEmpty()) {
+			Vertex currentVertex = st.peek();
+			Vertex nextAdjacentVertex = getUnvisitedVertex(currentVertex);
+			if (nextAdjacentVertex == v2) {
+				return true;
+			} else if (nextAdjacentVertex != null) {
+				nextAdjacentVertex.setVisited(true);
+				st.push(nextAdjacentVertex);
+			} else {
+				st.pop();
+			}
+		}
+
+		return false;
+	}
+
+	public Vertex getUnvisitedVertex(Vertex v) {
+		for (int i = 0; i < v.getAdjacentVertices().size(); i++) {
+			Vertex currentVertex = v.getAdjacentVertices().get(i);
+			if (!currentVertex.isVisited()) {
+				return currentVertex;
+			}
+		}
+		return null;
+	}
+
+	public LinkedList<Vertex> getVertices() {
+		return vertices;
+	}
+
+	public void setVertices(LinkedList<Vertex> vertices) {
+		this.vertices = vertices;
+	}
+
+	public boolean isDirectedGraph() {
+		return isDirectedGraph;
+	}
+
+	public void setDirectedGraph(boolean isDirectedGraph) {
+		this.isDirectedGraph = isDirectedGraph;
+	}
+
+	public Vertex getRoot() {
+		return root;
+	}
+
+	public void setRoot(Vertex root) {
+		this.root = root;
+	}
+
+	Graph(boolean isDirected) {
+		this.isDirectedGraph = isDirected;
+		vertices = new LinkedList<Vertex>();
+	}
+
+	public void addEdge(Vertex v1, Vertex v2) {
+		v1.adjacentVertices.add(v2);
+		if (!isDirectedGraph)
+			v2.adjacentVertices.add(v1);
+
+	}
+
+}
+
+class Vertex {
+	int verticeName;
+	LinkedList<Vertex> adjacentVertices;
+	boolean isVisited;
+
+	Vertex(int name) {
+		this.verticeName = name;
+		adjacentVertices = new LinkedList<Vertex>();
+		isVisited = false;
+	}
+
+	public String toString() {
+		return this.verticeName + "";
+	}
+
+	public int getVerticeName() {
+		return verticeName;
+	}
+
+	public void setVerticeName(int verticeName) {
+		this.verticeName = verticeName;
+	}
+
+	public LinkedList<Vertex> getAdjacentVertices() {
+		return adjacentVertices;
+	}
+
+	public void setAdjacentVertices(LinkedList<Vertex> adjacentVertices) {
+		this.adjacentVertices = adjacentVertices;
+	}
+
+	public boolean isVisited() {
+		return isVisited;
+	}
+
+	public void setVisited(boolean isVisited) {
+		this.isVisited = isVisited;
+	}
+
+}
