@@ -1,0 +1,45 @@
+package com.uta.hackerRank;
+
+
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+public class Solution {
+    
+    static String checkPanagram(String input){
+        if(input.length() == 0)
+            return "not pangram";
+        boolean []test = new boolean[26]; 
+        for(int i = 0 ; i < input.length() ; i++){
+        	int asciiValue = (int)input.charAt(i); 
+        	if( asciiValue > 122 || asciiValue < 65){
+        		continue;
+        	}else{
+        		//Capital Letter case
+        		if( asciiValue > 64 && asciiValue < 91){
+        			asciiValue = asciiValue - 'A';
+        			test[asciiValue] = true;
+        		}else{
+        			asciiValue = asciiValue - 'a';
+        			test[asciiValue] = true;
+        		}
+        		
+        	}
+        }
+        for(boolean eachValue : test){
+        	if(eachValue == false)
+        		return "not pangram";
+        }
+        return "pangram";
+    }
+
+    public static void main(String[] args) throws IOException {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution. */
+    	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    	String input = br.readLine();
+    	System.out.println(checkPanagram(input));
+    }
+}
