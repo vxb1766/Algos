@@ -1,0 +1,194 @@
+/*
+ * Problem : Given a binary tree, design an algorithm which creates a linked list of all the nodes at each depth
+ *  (e.g., if you have a tree with depth D, you’ll have D linked lists).
+ */
+package com.uta.cracking.tree;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
+/*
+ * Logic :Maintain two Queues. CurrentLevel and Next Level.
+ * Representation Used For Tree: HashMap : <Node> , LinkedList<Node>{ To Represent adjacent Nodes}
+ * Step 1: Add Root to the current Queue.
+ * Step 2: As Long As queue is !Empty
+ * Step 3: Copy current Level to Next Level and add it's children back to new current Level
+ * Step 4: So for each Node in the Next level, and each Child of each Node should be extracted.
+ * Hence there are two for each Loop
+ * But its still O(V+E) as you touch each node only once. 	
+ */
+public class DLinkedListFromTree {
+	int Levels = 0;
+
+	public ArrayList<LinkedList<Node>> modifiedBFS(
+			HashMap<Node, LinkedList<Node>> tree, Node root) {
+		ArrayList<LinkedList<Node>> result = new ArrayList<>();
+		Queue<Node> currentLevel = new LinkedList<Node>();
+		Queue<Node> nextLevel;
+		if (root != null) {
+			currentLevel.add(root);
+		} else
+			return null;
+
+		while (currentLevel.size() > 0) {
+			Levels++;
+			result.add((LinkedList<Node>) currentLevel);
+			nextLevel = currentLevel;
+			currentLevel = new LinkedList<Node>();
+			for (Node eachNode : nextLevel) {
+				if (tree.get(eachNode) != null) {
+					for (Node eachChild : tree.get(eachNode)) {
+						currentLevel.add(eachChild);
+					}
+				}
+			}
+		}
+		System.out.println(Levels);
+		return result;
+	}
+
+	public LinkedList<LinkedList<Node>> levelOrder(LinkedList<Node> currentLevel, LinkedList<LinkedList<Node>> result) {
+		result.add(currentLevel);
+		if(currentLevel.isEmpty())return null;
+		LinkedList<Node> nextLevel = new LinkedList<Node>();
+		for (Node eachNode : currentLevel) {
+
+			if (eachNode.llink != null) {
+				nextLevel.add(eachNode.llink);
+			}
+			if (eachNode.rlink != null) {
+				nextLevel.add(eachNode.rlink);
+			}
+		}
+		return levelOrder(nextLevel, result);
+	}
+	
+	public LinkedList<Node> levelOrderPrintingOnly(LinkedList<Node> currentLevel){
+		if(currentLevel.isEmpty())return null;
+		LinkedList<Node> nextLevel = new LinkedList<Node>();
+		for(Node eachNode : currentLevel){
+			System.out.print(eachNode.getItem()+"\t");
+			if (eachNode.llink != null) {
+				nextLevel.add(eachNode.llink);
+			}
+			if (eachNode.rlink != null) {
+				nextLevel.add(eachNode.rlink);
+			}
+		}
+		System.out.println();
+		return levelOrderPrintingOnly(nextLevel);
+	}
+	
+	public LinkedList<Node> modifiedBFSPrintingOnly(Node root) {
+		if (root == null)
+			return null;
+		LinkedList<Node> currentLevel = new LinkedList<Node>();
+		LinkedList<LinkedList<Node>> result = new LinkedList<LinkedList<Node>>();
+		currentLevel.add(root);
+		return levelOrderPrintingOnly(currentLevel);
+	}
+
+	public LinkedList<LinkedList<Node>> modifiedBFS(Node root) {
+		if (root == null)
+			return null;
+		LinkedList<Node> currentLevel = new LinkedList<Node>();
+		LinkedList<LinkedList<Node>> result = new LinkedList<LinkedList<Node>>();
+		currentLevel.add(root);
+		return levelOrder(currentLevel, result);
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		// Build a Tree
+		Node n1 = new Node(1);
+		Node n2 = new Node(2);
+		Node n3 = new Node(3);
+		Node n4 = new Node(4);
+		Node n5 = new Node(5);
+		Node n6 = new Node(6);
+		Node n7 = new Node(7);
+
+		// Tree in Tree format
+		n1.llink = n2;
+		n1.rlink = n3;
+		n2.llink = n4;
+		n2.rlink = n5;
+		n3.llink = n6;
+		n3.rlink = n7;
+		System.out.println(new DLinkedListFromTree().modifiedBFS(n1));
+		System.out.println(new DLinkedListFromTree().modifiedBFSPrintingOnly(n1));
+
+		// Tree in form of hashmap
+		HashMap<Node, LinkedList<Node>> tree = new HashMap<>();
+		LinkedList<Node> n1Children = new LinkedList<Node>();
+		LinkedList<Node> n2Children = new LinkedList<Node>();
+		LinkedList<Node> n3Children = new LinkedList<Node>();
+
+		n1Children.add(n2);
+		n1Children.add(n3);
+		tree.put(n1, n1Children);
+
+		n2Children.add(n4);
+		n2Children.add(n5);
+		tree.put(n2, n2Children);
+
+		n3Children.add(n6);
+		n3Children.add(n7);
+		tree.put(n3, n3Children);
+		System.out.println(new DLinkedListFromTree().modifiedBFS(tree, n1));
+		System.out.println();
+
+	}
+
+}
+
+class Node {
+	int item;
+	Node llink;
+	Node rlink;
+
+	LinkedList<Node> adjacentNodes;
+	boolean isVisited;
+
+	public String toString() {
+		return this.item + "";
+	}
+
+	public void addEdge(Node n2) {
+		this.adjacentNodes.add(n2);
+	}
+
+	Node(int item) {
+		this.item = item;
+		adjacentNodes = new LinkedList<>();
+		isVisited = false;
+	}
+
+	public int getItem() {
+		return item;
+	}
+
+	public void setItem(int item) {
+		this.item = item;
+	}
+
+	public LinkedList<Node> getAdjacentNodes() {
+		return adjacentNodes;
+	}
+
+	public void setAdjacentNodes(LinkedList<Node> adjacentNodes) {
+		this.adjacentNodes = adjacentNodes;
+	}
+
+	public boolean isVisited() {
+		return isVisited;
+	}
+
+	public void setVisited(boolean isVisited) {
+		this.isVisited = isVisited;
+	}
+
+}
