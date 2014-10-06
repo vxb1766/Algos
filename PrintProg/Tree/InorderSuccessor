@@ -1,0 +1,117 @@
+package com.uta.cracking.tree;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.concurrent.LinkedBlockingDeque;
+
+public class InorderSUccessor {
+
+	Node root;
+	HashSet<Node> nodeList;
+
+	public Node getRoot() {
+		return root;
+	}
+
+	public void setRoot(Node root) {
+		this.root = root;
+	}
+
+	public HashSet<Node> getNodeList() {
+		return nodeList;
+	}
+
+	public void setNodeList(HashSet<Node> nodeList) {
+		this.nodeList = nodeList;
+	}
+
+	public InorderSUccessor(Node root) {
+		// TODO Auto-generated constructor stub
+		this.root = root;
+		nodeList = new HashSet<Node>();
+	}
+
+	public Node buildTree(int[] input) {
+		if (input.length == 0)
+			return null;
+		else {
+			this.root = new Node(input[0]);
+			nodeList.add(root);
+		}
+		for (int i = 1; i < input.length; i++) {
+			nodeList.add(makeTree(this.root, input[i]));
+
+		}
+		return null;
+	}
+
+	public Node makeTree(Node root, int item) {
+		if (root == null) {
+			return new Node(item);
+		} else if (item < root.item) {
+			root.llink = makeTree(root.llink, item);
+			root.llink.parent = root;
+			nodeList.add(root.llink);
+		} else {
+			root.rlink = makeTree(root.rlink, item);
+			root.rlink.parent = root;
+			nodeList.add(root.rlink);
+
+		}
+
+		return root;
+
+	}
+
+	public Node getInorderSuccessor(Node x) {
+		if (x == null)
+			return x;
+		if (x.rlink != null) {
+			return getTreeMinimum(x.rlink);
+		} else {
+			Node parent = x.parent;
+			while (parent != null && x == parent.rlink) {
+				x = parent;
+				parent = parent.parent;
+			}
+			return parent;
+		}
+	}
+
+	public Node getTreeMinimum(Node root) {
+		if (root == null)
+			return null;
+		while (root.llink != null) {
+			root = root.llink;
+		}
+		return root;
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		int[] input = { 20, 8, 25, 7, 15, 12, 18 };
+		InorderSUccessor i = new InorderSUccessor(null);
+		i.buildTree(input);
+		for (Node eachNode : i.getNodeList()) {
+			System.out.println("Inorder Successor of:" + eachNode + "is :"
+					+ i.getInorderSuccessor(eachNode));
+		}
+	}
+}
+
+class Node {
+	int item;
+	Node parent;
+	Node llink;
+	Node rlink;
+
+	Node(int item) {
+		this.item = item;
+	}
+
+	public String toString() {
+		return this.item + "";
+	}
+
+}
