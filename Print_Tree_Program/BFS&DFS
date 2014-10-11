@@ -1,0 +1,135 @@
+package com.uta.graphs;
+
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
+
+public class BFS {
+
+	public static void bfs(Node root) {
+		Queue<Node> q = new LinkedList<Node>();
+		q.add(root);
+		StringBuilder sb = new StringBuilder();
+
+		root.setVisited(true);
+		while (!q.isEmpty()) {
+			Node currentNode = q.remove();
+			sb.append(currentNode.item);
+			sb.append("\t");
+
+			for (int i = 0; i < currentNode.getChildrenList().size(); i++) {
+				Node currentChild = currentNode.getChildrenList().get(i);
+				if (currentChild != null && !currentChild.isVisited()) {
+					currentChild.setVisited(true);
+					q.add(currentChild);
+				}
+			}
+
+		}
+		System.out.println(sb.toString());
+	}
+
+	public static void dfs(Node root) {
+		Stack<Node> st = new Stack<Node>();
+		StringBuilder sb = new StringBuilder();
+		if (root == null)
+			return;
+		root.setVisited(true);
+		st.push(root);
+		sb.append(root.getItem());
+		sb.append("\t");
+		while (!st.isEmpty()) {
+			Node currentNode = st.peek();
+			
+			Node unvisitedChild = getUnvisitedChild(currentNode);
+			if (unvisitedChild != null ) {
+				sb.append(unvisitedChild.getItem());
+				sb.append("\t");
+				st.push(unvisitedChild);
+			}else{
+				st.pop();
+			}
+		}
+		System.out.println(sb.toString());
+	}
+
+	
+	private static Node getUnvisitedChild(Node currentNode) {
+		// TODO Auto-generated method stub
+		Node currentChild = null;
+		for (int i = 0; i < currentNode.getChildrenList().size(); i++) {
+			currentChild = currentNode.getChildrenList().get(i);
+			if (!currentChild.isVisited()) {
+				currentChild.setVisited(true);
+				return currentChild;
+			}else{
+				currentChild = null;
+			}
+		}
+		return currentChild;
+	}
+
+	public static void main(String[] args) {
+		int[] input = { 0, 1, 2, 3, 4, 5, 6 };
+		Node n1 = new Node(0);
+		Node n2 = new Node(1);
+		Node n3 = new Node(2);
+		Node n4 = new Node(3);
+		Node n5 = new Node(4);
+		Node n6 = new Node(5);
+		Node n7 = new Node(6);
+		n1.addEdge(n2);
+		n1.addEdge(n3);
+		n2.addEdge(n4);
+		n2.addEdge(n5);
+		n3.addEdge(n6);
+		n3.addEdge(n7);
+	//	bfs(n1);
+		dfs(n1);
+
+	}
+}
+
+class Node {
+	int item;
+	boolean isVisited;
+	LinkedList<Node> childrenList;
+
+	public int getItem() {
+		return item;
+	}
+
+	public void setItem(int item) {
+		this.item = item;
+	}
+
+	public boolean isVisited() {
+		return isVisited;
+	}
+
+	public void setVisited(boolean isVisited) {
+		this.isVisited = isVisited;
+	}
+
+	public LinkedList<Node> getChildrenList() {
+		return childrenList;
+	}
+
+	public void setChildrenList(LinkedList<Node> childrenList) {
+		this.childrenList = childrenList;
+	}
+
+	Node(int item) {
+		this.item = item;
+		childrenList = new LinkedList<Node>();
+	}
+
+	public void addEdge(Node otherNode) {
+		this.childrenList.add(otherNode);
+	}
+
+	public String toString() {
+		return (item + "");
+	}
+
+}
