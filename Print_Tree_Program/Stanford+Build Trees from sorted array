@@ -1,0 +1,249 @@
+package com.uta.tree;
+
+import java.io.ObjectInputStream.GetField;
+
+public class StanfordTrees {
+	Node root;
+
+	public Node getRoot() {
+		return root;
+	}
+
+	public void setRoot(Node root) {
+		this.root = root;
+	}
+
+	public StanfordTrees() {
+		// TODO Auto-generated constructor stub
+		root = null;
+	}
+
+	public int getMinimum(Node root) {
+		if (root == null) {
+			return Integer.MAX_VALUE;
+		} else {
+			int min = 0;
+			int left = getMinimum(root.llink);
+			int right = getMinimum(root.rlink);
+			if (left < right)
+				min = left;
+			else
+				min = right;
+			if (min > root.item)
+				min = root.item;
+			return min;
+		}
+	}
+
+	public int getMaximum(Node root) {
+		if (root == null) {
+			return Integer.MIN_VALUE;
+		} else {
+			int max = 0;
+			int left = getMaximum(root.llink);
+			int right = getMaximum(root.rlink);
+			if (left > right)
+				max = left;
+			else
+				max = right;
+			if (max < root.item)
+				max = root.item;
+			return max;
+		}
+	}
+
+	public Node insert(int item) {
+		Node temp = new Node(item);
+		if (root == null) {
+			root = temp;
+		} else {
+			Node prev = null, cur = root;
+			while (cur != null) {
+				prev = cur;
+				if (item < cur.item)
+					cur = cur.llink;
+				else
+					cur = cur.rlink;
+			}
+			if (item < prev.item)
+				prev.llink = temp;
+			else
+				prev.rlink = temp;
+		}
+		return root;
+	}
+
+	public void display(Node root) {
+		if (root == null)
+			return;
+		display(root.llink);
+		System.out.print(root.item + "\t");
+		display(root.rlink);
+
+	}
+	
+	public Node buildTreeFromSortedArray(int [] a , int low , int high , Node root){
+		int mid = (low+high)/2;
+		if(high < low || low > high)return null;
+		root = new Node(a[mid]);
+		System.out.print(root.item+"\t");
+		root.llink = buildTreeFromSortedArray(a, low, mid-1, root);
+		root.rlink = buildTreeFromSortedArray(a, mid+1, high, root);
+		return root;
+		
+	}
+
+	public Node insertRecursion(Node root, int item) {
+		if (root == null)
+			return new Node(item);
+		else if (item < root.item)
+			root.llink = insertRecursion(root.llink, item);
+		else
+			root.rlink = insertRecursion(root.rlink, item);
+		return root;
+	}
+
+	public int getSize(Node root) {
+		if (root == null)
+			return 0;
+		else {
+			return (getSize(root.llink) + 1 + getSize(root.rlink));
+		}
+	}
+
+	public int maxDepth(Node root) {
+		if (root == null)
+			return 0;
+		else {
+			int left = 0, right = 0;
+			left = maxDepth(root.llink);
+			right = maxDepth(root.rlink);
+			if (left > right)
+				return left + 1;
+			else
+				return right + 1;
+		}
+	}
+
+	public boolean hasPathSum(Node root, int sum) {
+		if (root == null && sum == 0)
+			return true;
+		if (root == null)
+			return false;
+		else {
+			sum = sum - root.item;
+			return ((hasPathSum(root.llink, sum) || hasPathSum(root.rlink, sum)));
+		}
+	}
+
+	public void printPaths(Node root, java.util.Stack st) {
+		if (root == null)
+			return;
+		st.push(root.item);
+		if (root.llink == null && root.rlink == null) {
+			System.out.println("Stack:" + st.toString());
+		}
+		printPaths(root.llink, st);
+		printPaths(root.rlink, st);
+		st.pop();
+	}
+
+	public boolean isBalancedTree(Node root) {
+		if (root == null)
+			return true;
+
+		int left = 0, right = 0;
+		left = getMaximumDepth(root.llink);
+		right = getMaximumDepth(root.rlink);
+		if (Math.abs(left - right) > 1) {
+			return false;
+		}else{
+			return (isBalancedTree(root.llink) && isBalancedTree(root.rlink));
+		}
+		
+	}
+
+	public int getMaximumDepth(Node root) {
+		if (root == null)
+			return 0;
+		else {
+			int left = getMaximumDepth(root.llink);
+			int right = getMaximumDepth(root.rlink);
+			if (left > right)
+				return left + 1;
+			else
+				return right + 1;
+		}
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		StanfordTrees s = new StanfordTrees();
+		int [] a = {1,2,3,4,5,6,7,8,9,10,11,12,13,14};
+		s.setRoot(s.buildTreeFromSortedArray(a, 0, a.length-1, null));
+		s.display(s.getRoot());
+		/*
+		 * s.insert(5); s.insert(4); s.insert(15); s.insert(35); s.insert(41);
+		 * s.insert(25); s.display(s.getRoot()); System.out.println("Size:" +
+		 * s.getSize(s.getRoot())); System.out.println("MaxDepth:" +
+		 * s.maxDepth(s.getRoot()));
+		 */
+		/*
+		 * Building a binary tree not BST
+		 */
+		Node n1 = new Node(5);
+		Node n2 = new Node(4);
+		Node n3 = new Node(8);
+		Node n4 = new Node(11);
+		Node n5 = new Node(13);
+		Node n6 = new Node(4);
+		Node n7 = new Node(7);
+		Node n8 = new Node(2);
+		Node n9 = new Node(1);
+		n1.llink = n2;
+		n1.rlink = n3;
+		n2.llink = n4;
+		n2.rlink = n5;
+		n3.rlink = n6;
+		n5.llink = n7;
+
+	/*	n1.llink = n2;
+		n1.rlink = n3;
+		n2.llink = n4;
+		n3.llink = n5;
+		n3.rlink = n6;
+		n4.llink = n7;
+		n4.rlink = n8;
+		n6.rlink = n9;
+	*/	/*s.setRoot(n1);
+	*/	//System.out.println(s.isBalancedTree(n1));
+		/*n1.llink = n2;
+		n1.rlink = n3;*/
+		s.setRoot(n1);
+		System.out.println(s.isBalancedTree(n1));
+		System.out.println("Minimum:" + s.getMinimum(s.getRoot()));
+		System.out.println("Maximum:" + s.getMaximum(s.getRoot()));
+		s.display(n1);
+		System.out.println();
+		System.out.println("Has Path Sum:" + s.hasPathSum(n1, 18));
+		s.printPaths(n1, new java.util.Stack<>());
+
+		/*
+		 * s.setRoot(null); Node root1 = s.getRoot(),root=null; root1 =
+		 * s.insertRecursion(root1,5 ); root = s.insertRecursion(root,15 ); root
+		 * = s.insertRecursion(root,345 );
+		 */
+
+	}
+
+}
+
+class Node {
+	int item;
+	Node llink;
+	Node rlink;
+
+	public Node(int item) {
+		this.item = item;
+	}
+}
