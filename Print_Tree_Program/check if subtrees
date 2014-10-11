@@ -1,0 +1,137 @@
+package com.uta.cracking.subtrees;
+
+import java.util.Stack;
+
+public class Subtrees {
+	Node root;
+
+	public Node buildTree(int[] input) {
+		if (input.length != 0) {
+			root = new Node(input[0]);
+		}
+		for (int i = 1; i < input.length; i++) {
+			makeTree(root, input[i]);
+		}
+		return root;
+	}
+
+	public Node makeTree(Node node, int item) {
+		if (node == null)
+			return new Node(item);
+		else if (item < node.item)
+			node.llink = makeTree(node.llink, item);
+		else
+			node.rlink = makeTree(node.rlink, item);
+		return node;
+	}
+
+	public boolean treesSame(Node root1, Node root2) {
+		if (root1 == null && root2 == null)
+			return true;
+		else if (root1 != null && root2 != null) {
+			if (root1.item == root2.item && treesSame(root1.llink, root2.llink)
+					&& treesSame(root1.rlink, root2.rlink))
+				return true;
+		} else
+			return false;
+		return false;
+
+	}
+
+	public boolean subTreeCheck(Node root1, Node root2) {
+		if (root1 == null)
+			return false;
+		else if (root1.item == root2.item) {
+			if (treesSame(root1, root2))
+				return true;
+		}
+		return (subTreeCheck(root1.llink, root2) || subTreeCheck(root1.rlink,
+				root2));
+
+	}
+
+	public void pathSumAddTOX(Node root, int sum, Stack<Integer> st,int x) {
+		if (root == null && sum != 0)
+			return;
+		if (sum == x || root == null) {
+			System.out.println(st.toString());
+		} else {
+			st.push(root.item);
+			sum = sum + root.item;
+			pathSumAddTOX(root.llink, sum, st,x);
+			pathSumAddTOX(root.rlink, sum, st,x);
+			st.pop();
+		}
+	}
+
+	public Node getUnvisitedChild(Node currentNode) {
+		if (currentNode == null)
+			return null;
+		if (currentNode.llink != null && !currentNode.llink.isVisited)
+			return currentNode.llink;
+		if (currentNode.rlink != null && !currentNode.rlink.isVisited)
+			return currentNode.rlink;
+		else
+			return null;
+	}
+
+	public void dfs(Node root1, Node root2, int item) {
+		Stack<Node> st = new Stack<Node>();
+		if (root1.item == root2.item)
+			if (root1 != null) {
+				st.push(root1);
+				root1.isVisited = true;
+			}
+		while (!st.isEmpty()) {
+			Node currentNode = st.peek();
+			Node currentChild = getUnvisitedChild(currentNode);
+			if (currentChild != null) {
+				st.push(currentChild);
+				currentChild.isVisited = true;
+			} else {
+				st.pop();
+			}
+		}
+
+	}
+	
+	public  boolean isSameTree(Node root1, Node root2){
+		if(root1 == null && root2 == null)return true;
+		else if(root1 == null || root2 == null) return false;
+		else if(root1.item != root2.item) return false;
+		else return(isSameTree(root1.llink, root2.llink) &&
+				isSameTree(root1.rlink, root2.rlink));
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub //,
+		int[] input1 = { 4,3,2,6,7};
+		int[] input2 = { 4,3,2,6,7};
+		Subtrees s1 = new Subtrees();
+		Subtrees s2 = new Subtrees();
+		s1.buildTree(input1);
+		s2.buildTree(input2);
+		Node root1 = s1.root;
+		Node root2 = s2.root;
+		System.out.println(s1.isSameTree(root1, root2));
+		Stack<Integer> st = new Stack<Integer>();
+		System.out.println(s1.subTreeCheck(root1, root2));
+		s1.pathSumAddTOX(root1, 0, st,3);
+	}
+
+}
+
+class Node {
+	int item;
+	Node llink;
+	Node rlink;
+	boolean isVisited;
+
+	Node(int item) {
+		this.item = item;
+	}
+
+	public String toString() {
+		return this.item + "";
+	}
+}
