@@ -1,0 +1,47 @@
+import java.util.ArrayList;
+public class NQueens {
+	
+	public ArrayList<Integer []> placeQueen(int row, Integer [] column , ArrayList<Integer []>results , int gridSize){
+		if(row == gridSize){
+			results.add(column.clone());
+		}else{
+			for(int col = 0 ; col < gridSize ; col++){
+				if(checkValid(column,row,col)){
+					column[row] = col;
+					placeQueen(row+1, column, results, gridSize);
+				}
+			}
+		}
+		return results;
+	}
+	/*
+	 * Row 1 & col 1 are the current row and column. 
+	*/
+	private boolean checkValid(Integer[] column, int row1, int col1) {
+		// TODO Auto-generated method stub
+		for(int row2 = 0 ; row2 < row1 ; row2++){
+			int col2 = column[row2];
+			
+			//check for same column case
+			if(col2 == col1) return false;
+			
+			//check for diagonal
+			if(Math.abs(row2 - row1) == Math.abs(col2 - col1))return false;
+		}
+		return true;
+	}
+	
+	public static void main(String [] args){
+		int gridSize = 8;
+		ArrayList<Integer []> results = new NQueens().placeQueen(0, new Integer[gridSize],new ArrayList<Integer []>(),gridSize);
+		int solution = 1;
+		for(Integer [] eachSolution: results){
+			System.out.print(solution+") ");
+			for(Integer eachValue : eachSolution){
+				System.out.print(eachValue+"\t");
+			}
+			solution++;
+			System.out.println();
+		}
+	}
+}
