@@ -23,7 +23,42 @@ public class Parentheses{
 		return result;
 
 	}
+	
+	/*
+	 * Solution 2: valid paren source: Not mIne http://stackoverflow.com/questions/14228255/print-all-valid-combinations-of-n-pairs-of-parentheses
+	 */
+	public static void printPar(int l, int r, char[] str, int count) { // Use print the parentheses
+		if (l == 0 && r == 0) { // if there are no parentheses available, print them out
+			System.out.println(str); // Print out the parentheses
+		}
+
+		else {
+			if (l > 0) { // try a left paren, if there are some available
+				str[count] = '(';
+				printPar(l - 1, r, str, count + 1); // Recursion
+			}
+			// Add constraint that a parenthesis is open before inserting a
+			// closing paranthesis
+			// hence, add l < r - meaning one 'l' is printed before going for an
+			// 'r'
+			if (l < r) { // try a right paren, if there are some
+									// available
+				str[count] = ')';
+				printPar(l, r - 1, str, count + 1); // Recursion
+			}
+		}
+	}
+
+	public static void printPar(int count) {
+		char[] str = new char[count * 2]; // Create a char array to store the
+											// parentheses
+		printPar(count, count, str, 0); // call the printPar method, the
+										// parameters are the left,
+		// the right parentheses, the array to store the
+		// parenthese, and the counter
+	}
   public static void main(String [] args){
     System.out.println(new Parentheses().parentheses(3).toString());
+    printPar(3);//For solution 2
   }
 }
