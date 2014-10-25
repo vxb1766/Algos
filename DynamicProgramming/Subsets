@@ -1,0 +1,40 @@
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.print.attribute.HashAttributeSet;
+
+public class SubsetSet {
+
+	public ArrayList<ArrayList<Integer>> getSet(int[] input) {
+		ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();
+
+		for (int i = 0; i < input.length; i++) {
+			ArrayList<ArrayList<Integer>> temp = new ArrayList<ArrayList<Integer>>();
+
+			// copy every element in result to temp;
+			for (ArrayList<Integer> a : result) {
+				temp.add(new ArrayList<Integer>(a));
+			}
+
+			// add input[index[ to every set
+			for (ArrayList<Integer> eachTemp : temp) {
+				eachTemp.add(input[i]);
+			}
+
+			// create a single element arraylist
+			ArrayList<Integer> singleItem = new ArrayList<Integer>();
+			singleItem.add(input[i]);
+			temp.add(singleItem);
+
+			result.addAll(temp);
+		}
+		return result;
+	}
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		int[] input = { 3, 6, 9 };
+		System.out.println(new SubsetSet().getSet(input));
+	}
+}
