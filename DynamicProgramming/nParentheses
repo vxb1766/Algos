@@ -25,7 +25,8 @@ public class Parentheses{
 	}
 	
 	/*
-	 * Solution 2: valid paren source: Not mIne http://stackoverflow.com/questions/14228255/print-all-valid-combinations-of-n-pairs-of-parentheses
+	 * Solution 2: valid paren source: 
+	 Not mIne http://stackoverflow.com/questions/14228255/print-all-valid-combinations-of-n-pairs-of-parentheses
 	 */
 	public static void printPar(int l, int r, char[] str, int count) { // Use print the parentheses
 		if (l == 0 && r == 0) { // if there are no parentheses available, print them out
