@@ -1,0 +1,54 @@
+import java.util.Stack;
+
+public class MagicIndex {
+
+	/*
+	 * Case 1 : Distinct Sorted Elements.
+	 */
+	public int getMagicIndex(int start, int end, int[] input) {
+		int test = 0;
+		int mid = (start + end) / 2;
+		if (input[mid] == mid) {
+			return mid;
+
+		} else if (input[mid] < mid) {
+			test = getMagicIndex(start, end, input);
+		} else if (input[mid] > mid) {
+			test = getMagicIndex(start, end, input);
+		}
+		return test;
+
+	}
+
+	/*
+	 * Case 2 : Sorted Repeated Elements.
+	 */
+	public Stack getIndex(int start, int end, int[] input,Stack st) {
+		int test = 0;
+		int midIndex = (start + end) / 2;
+		int midValue = input[midIndex];
+
+		if (midIndex == midValue){
+			st.push(midIndex);
+			return st;
+		}
+			
+		int leftEnd = Math.min(midIndex - 1, midValue);
+		if (leftEnd > -1)
+			getIndex(start, leftEnd, input,st);
+
+		int rightStart = Math.max(midIndex + 1, midValue);
+		if (rightStart < input.length)
+			getIndex(rightStart, end, input,st);
+
+		return st;
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		int[] input = { -40, 1, 1, 1, 4, 4, 6 };
+		System.out.println(new MagicIndex()
+				.getIndex(0, input.length - 1, input,new Stack()).toString());
+	}
+
+}
