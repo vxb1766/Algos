@@ -1,0 +1,29 @@
+public class Parentheses{
+
+  public Set<String> parentheses(int remaining) {
+		Set<String> result = new HashSet<String>();
+		if (remaining == 0) {
+			result.add("");
+		} else {
+			Set<String> prev = parentheses(remaining - 1);
+			for (String eachParen : prev) {
+				for (int i = 0; i < eachParen.length(); i++) {
+					if (eachParen.charAt(i) == '(') {
+						// if u need string till i, then u need to include upto
+						// i+1
+						String left = eachParen.substring(0, i + 1);
+						String right = eachParen.substring(i + 1);
+						result.add(left + eachParen + right);
+					}
+				}
+				// add parent to beggining
+				result.add("()" + eachParen);
+			}
+		}
+		return result;
+
+	}
+  public static void main(String [] args){
+    System.out.println(new Parentheses().parentheses(3).toString());
+  }
+}
