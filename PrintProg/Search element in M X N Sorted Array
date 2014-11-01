@@ -1,0 +1,98 @@
+package com.uta.practise28102014;
+
+public class MXNSortedMatrix {
+
+	public point findElemnt(int[][] matrix, point origin, point dest, int key) {
+		if (!origin.checkBound(matrix) || !dest.checkBound(matrix))
+			return null;
+
+		if (!origin.isBefore(dest)) {
+			return null;
+		} else if (matrix[origin.row][origin.col] == key) {
+			return origin;
+		}
+		int diagonal = Math.min((dest.row - origin.row),
+				(dest.col - origin.col));
+		point start = new point(origin);
+		point p = new point(0, 0);
+
+		point end = new point(start.row + diagonal, start.col + diagonal);
+
+		while (start.isBefore(end)) {
+			p.setAverage(start, end);
+			if (key > matrix[p.row][p.col]) {
+				start.row = p.row + 1;
+				start.col = p.col + 1;
+			} else {
+				end.row = p.row - 1;
+				end.col = p.col - 1;
+
+			}
+		}
+
+		return partitionAndSearch(matrix, origin, dest, start, key);
+	}
+
+	public point partitionAndSearch(int[][] matrix, point origin, point dest,
+			point pivot, int key) {
+		point lowerLeftOrigin = new point(pivot.row, origin.col);
+		point lowerLeftDest = new point(dest.row, pivot.col - 1);
+		point upperLeftOrigin = new point(origin.row, pivot.col);
+		point upperLeftDest = new point(pivot.row - 1, dest.col);
+
+		point lowerLeft = findElemnt(matrix, lowerLeftOrigin, lowerLeftDest,
+				key);
+		if (lowerLeft == null) {
+			lowerLeft = findElemnt(matrix, upperLeftOrigin, upperLeftDest, key);
+		}
+		return lowerLeft;
+
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		int[][] matrix = { { 5, 10, 15, 20, 25, 30 },
+				{ 6, 12, 18, 24, 36, 42 }, { 7, 14, 21, 28, 49, 56 },
+				{ 8, 16, 32, 80, 88, 96 }, { 9, 17, 33, 81, 89, 97 }, };
+
+		System.out.println(new MXNSortedMatrix().findElemnt(matrix, new point(
+				0, 0), new point(matrix.length - 1, matrix[0].length - 1), 00));
+	}
+
+}
+
+class point implements Cloneable {
+	int row, col;
+
+	point(int x, int y) {
+		this.row = x;
+		this.col = y;
+
+	}
+
+	point(point p) {
+		this.row = p.row;
+		this.col = p.col;
+	}
+
+	public String toString() {
+		return this.row + "(," + this.col + ")";
+	}
+
+	public void setAverage(point start, point end) {
+		this.row = (start.row + end.row) / 2;
+		this.col = (start.col + end.col) / 2;
+	}
+
+	boolean checkBound(int[][] matrix) {
+		if (this.row <= matrix.length && this.col <= matrix[0].length)
+			return true;
+		return false;
+	}
+
+	boolean isBefore(point dest) {
+		if (this.row <= dest.row && this.col <= dest.col)
+			return true;
+		return false;
+	}
+}
