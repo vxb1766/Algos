@@ -1,0 +1,74 @@
+public class KIntervalReverseLinkedList {
+	public Node reverseList(Node head, int k) {
+		int count = 0;
+		if (head == null) {
+			return head;
+		}
+		Node prev, cur, next;
+		prev = null;
+		cur = head;
+
+		while (cur != null && count != k) {
+			next = cur.link;
+			cur.link = prev;
+			prev = cur;
+			cur = next;
+			count++;
+		}
+
+		head.link = reverseList(cur, k);
+		return prev;
+	}
+
+	public void disply(Node head) {
+		Node cur = head;
+		while (cur != null) {
+			System.out.print(cur.item + "\t");
+			cur = cur.link;
+		}
+		System.out.println();
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Node n1 = new Node(10);
+		Node n2 = new Node(11);
+		Node n3 = new Node(12);
+		Node n4 = new Node(13);
+		Node n5 = new Node(14);
+		Node n6 = new Node(15);
+		Node n7 = new Node(16);
+		Node n8 = new Node(17);
+		Node n9 = new Node(18);
+		Node n10 = new Node(19);
+		n1.link = n2;
+		n2.link = n3;
+		n3.link = n4;
+		n4.link = n5;
+		n5.link = n6;
+		n6.link = n7;
+		n7.link = n8;
+		n8.link = n9;
+		n9.link = n10;
+		n10.link = null;
+		KIntervalReverseLinkedList k = new KIntervalReverseLinkedList();
+		Node head = k.reverseList(n1, 3);
+		k.disply(head);
+
+	}
+
+}
+
+class Node {
+	int item;
+	Node link;
+	Node rlink;
+
+	Node(int item) {
+		this.item = item;
+	}
+
+	public String toString() {
+		return this.item + "";
+	}
+}
